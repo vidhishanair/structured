@@ -52,7 +52,6 @@ def run(config):
     print(config.__flags)
     logger.critical(str(config.__flags))
 
-    saver = tf.train.Saver()
     model = StructureModel(config)
     model.build()
     model.get_loss()
@@ -60,9 +59,9 @@ def run(config):
 
     num_batches_per_epoch = int(num_examples / config.batch_size)
     num_steps = config.epochs * num_batches_per_epoch
+    saver = tf.train.Saver()
 
     with tf.Session() as sess:
-        saver.save(sess, 'my_test_model',global_step=1000)
         gvi = tf.global_variables_initializer()
         sess.run(gvi)
         sess.run(model.embeddings.assign(embedding_matrix.astype(np.float32)))
@@ -83,4 +82,5 @@ def run(config):
                 logger.debug('Dev  ACC: {}\n'.format(acc_dev))
                 logger.handlers[0].flush()
                 loss = 0
+            saver.save(sess, 'my_test_model',global_step=1000)
 

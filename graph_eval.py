@@ -52,7 +52,7 @@ def run(config):
     print(config.__flags)
     logger.critical(str(config.__flags))
 
-    saver = tf.train.Saver()
+    #saver = tf.train.Saver()
     model = StructureModel(config)
     model.build()
     model.get_loss()
@@ -72,6 +72,9 @@ def run(config):
         for ct, batch in tqdm.tqdm(train_batches, total=num_steps):
             feed_dict = model.get_feed_dict(batch)
             outputs, str_scores_sent, str_scores_doc, _ ,_loss = sess.run([model.final_output, model.str_scores_sent, model.str_scores_doc, model.opt, model.loss], feed_dict=feed_dict)
+            print(str_scored_sent)
+            print(str_scores_doc)
+            exit()
             loss+=_loss
             if(ct%config.log_period==0):
                 acc_test = evaluate(sess, model, test_batches)
@@ -84,4 +87,5 @@ def run(config):
                 logger.debug('Dev  ACC: {}\n'.format(acc_dev))
                 logger.handlers[0].flush()
                 loss = 0
+
 
