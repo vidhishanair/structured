@@ -55,7 +55,7 @@ def run(config):
     #saver = tf.train.Saver()
     model = StructureModel(config)
     model.build()
-    model.get_loss()
+    model.restore_loss()
     # trainer = Trainer(config)
 
     num_batches_per_epoch = int(num_examples / config.batch_size)
@@ -63,16 +63,16 @@ def run(config):
 
     with tf.Session() as sess:
         new_saver = tf.train.import_meta_graph('my_test_model-1000.meta')
-        gvi = tf.global_variables_initializer()
-        sess.run(gvi)
-        sess.run(model.embeddings.assign(embedding_matrix.astype(np.float32)))
+        # gvi = tf.global_variables_initializer()
+        # sess.run(gvi)
+        # sess.run(model.embeddings.assign(embedding_matrix.astype(np.float32)))
         new_saver.restore(sess, tf.train.latest_checkpoint('./'))
         loss = 0
 
         for ct, batch in tqdm.tqdm(train_batches, total=num_steps):
             feed_dict = model.get_feed_dict(batch)
             outputs, str_scores_sent, str_scores_doc, _ ,_loss = sess.run([model.final_output, model.str_scores_sent, model.str_scores_doc, model.opt, model.loss], feed_dict=feed_dict)
-            print(str_scored_sent)
+            print(str_scores_sent)
             print(str_scores_doc)
             exit()
             loss+=_loss

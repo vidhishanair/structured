@@ -203,4 +203,20 @@ class StructureModel():
                     self.loss += self.config.norm * tf.nn.l2_loss(p)
             self.opt = optimizer.minimize(self.loss)
 
+    def restore_loss(self):
+        if (self.config.opt == 'Adam'):
+            optimizer = tf.get_collection("optimizer")[0]
+        elif (self.config.opt == 'Adagrad'):
+            optimizer = tf.get_collection("optimizer")[0]
+        with tf.variable_scope("Model"):
+            self.loss = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.final_output,
+                                                                       labels=self.t_variables['gold_labels'])
+            self.loss = tf.reduce_mean(self.loss)
+            model_params = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'Model')
+            str_params = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'Structure')
+            for p in model_params + str_params:
+                if ('bias' not in p.name):
+                    self.loss += self.config.norm * tf.nn.l2_loss(p)
+            self.opt = optimizer.minimize(self.loss)
+
 
