@@ -104,9 +104,9 @@ class Corpus:
                 sentences.extend(doc.sent_token_lst)
         print(sentences[0])
         if(options['skip_gram']):
-            self.w2v_model = gensim.models.word2vec.Word2Vec(size=options['emb_size'], window=5, min_count=5, workers=4, sg=1)
+            self.w2v_model = gensim.models.deprecated.word2vec.Word2Vec(size=options['emb_size'], window=5, min_count=5, workers=4, sg=1)
         else:
-            self.w2v_model = gensim.models.word2vec.Word2Vec(size=options['emb_size'], window=5, min_count=5, workers=4)
+            self.w2v_model = gensim.models.deprecated.word2vec.Word2Vec(size=options['emb_size'], window=5, min_count=5, workers=4)
         self.w2v_model.scan_vocab(sentences)  # initial survey
         rtn = self.w2v_model.scale_vocab(dry_run = True)  # trim by min_count & precalculate downsampling
         print(rtn)

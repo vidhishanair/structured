@@ -63,15 +63,15 @@ def run(config):
 
     with tf.Session() as sess:
         new_saver = tf.train.import_meta_graph('my_test_model-1000.meta')
-        new_saver.restore(sess, tf.train.latest_checkpoint('./'))
         gvi = tf.global_variables_initializer()
         sess.run(gvi)
         sess.run(model.embeddings.assign(embedding_matrix.astype(np.float32)))
+        new_saver.restore(sess, tf.train.latest_checkpoint('./'))
         loss = 0
 
         for ct, batch in tqdm.tqdm(train_batches, total=num_steps):
             feed_dict = model.get_feed_dict(batch)
-            outputs,_,_loss = sess.run([model.final_output, model.opt, model.loss], feed_dict=feed_dict)
+            outputs, str_scores_sent, str_scores_doc, _ ,_loss = sess.run([model.final_output, model.str_scores_sent, model.str_scores_doc, model.opt, model.loss], feed_dict=feed_dict)
             loss+=_loss
             if(ct%config.log_period==0):
                 acc_test = evaluate(sess, model, test_batches)

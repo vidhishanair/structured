@@ -34,6 +34,10 @@ flags.DEFINE_string("doc_attention", "max", "doc_attention")
 flags.DEFINE_bool("large_data", False, "large_data")
 flags.DEFINE_integer("log_period", 5000, "log_period")
 
+#to make run
+flags.DEFINE_integer("n_embed", 5000, "n_embed")
+flags.DEFINE_integer("d_embed", 5000, "d_embed")
+flags.DEFINE_integer("dim_hidden", 5000, "dim_hidden")
 
 def main(_):
     config = flags.FLAGS

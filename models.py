@@ -146,6 +146,7 @@ class StructureModel():
 
         str_scores_s_ = get_structure('sent', tokens_str, max_sent_l, mask1, mask2)  # batch_l,  sent_l+1, sent_l
         str_scores_s = tf.matrix_transpose(str_scores_s_)  # soft parent
+        self.str_scores_sent = str_scores_s
         tokens_sem_root = tf.concat([tf.tile(embeddings_root_s, [batch_l * max_doc_l, 1, 1]), tokens_sem], 1)
         tokens_output_ = tf.matmul(str_scores_s, tokens_sem_root)
         tokens_output = LReLu(tf.tensordot(tf.concat([tokens_sem, tokens_output_], 2), w_comb_s, [[2], [0]]) + b_comb_s)
@@ -168,6 +169,7 @@ class StructureModel():
 
         str_scores_ = get_structure('doc', sents_str,max_doc_l, self.t_variables['mask_parser_1'], self.t_variables['mask_parser_2'])  #batch_l,  sent_l+1, sent_l
         str_scores = tf.matrix_transpose(str_scores_)  # soft parent
+        self.str_scores_doc = str_scores
         sents_sem_root = tf.concat([tf.tile(embeddings_root, [batch_l, 1, 1]), sents_sem], 1)
         sents_output_ = tf.matmul(str_scores, sents_sem_root)
         sents_output = LReLu(tf.tensordot(tf.concat([sents_sem, sents_output_], 2), w_comb, [[2], [0]]) + b_comb)
