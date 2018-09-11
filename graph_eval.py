@@ -62,7 +62,8 @@ def run(config):
     num_steps = config.epochs * num_batches_per_epoch
 
     with tf.Session() as sess:
-        saver.save(sess, 'my_test_model',global_step=1000)
+        new_saver = tf.train.import_meta_graph('my_test_model-1000.meta')
+        new_saver.restore(sess, tf.train.latest_checkpoint('./'))
         gvi = tf.global_variables_initializer()
         sess.run(gvi)
         sess.run(model.embeddings.assign(embedding_matrix.astype(np.float32)))
